@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-
 import './PokemonItem.css';
+
 
 const PokemonItem = ({ name, url }) => {
     const [photo, setPhoto] = useState(null);
@@ -18,7 +18,7 @@ const PokemonItem = ({ name, url }) => {
 
     return (
         <div>   
-            {photo && (<img className={'pokemon-photo'} src={photo} alt={name}/>)}
+            {photo && (<img className={'pokemon-photo'} src={photo} alt={name} />)}
             {photo && (<div className={'pokemon-name'}>{name}</div>)}
         </div>
     )

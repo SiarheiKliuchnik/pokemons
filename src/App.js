@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import PokemonItem from './components/PokemonItem/PokemonItem';
 import PokemonInfo from './components/PokemonInfo/PokemonInfo';
@@ -14,7 +14,15 @@ function App() {
   const [isSinglePokemon, setIsSinglePokemon] = useState(false);
   const [url,setUrl] = useState('');
   const [isShowAll, setIsShowAll] = useState(false);
-  
+  const infoSection = useRef(null);
+  const gotoInfoSection = ()=>
+  window.scrollTo({
+    top: infoSection.current.offsetTop,
+    behavior: "smooth"
+  });
+
+  const [isAll, setIsAll] = useState(true);
+
 
 
   useEffect(() => {
@@ -23,18 +31,30 @@ function App() {
         return res.json();
       })
       .then(data => {
-        console.log(data);
         setIsData(true);
         setPrev(data.previous);
         setNext(data.next);
         setData(data.results);
       })
   }, []);
+
+  useEffect(() => {
+    fetch('https://pokeapi.co/api/v2/pokemon')
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        setIsData(true);
+        setPrev(data.previous);
+        setNext(data.next);
+        setData(data.results);
+        setIsShowAll(false)
+      })
+  }, [isAll]);
   
   useEffect(() => {
     fetch(url)
       .then(res => {
-        console.log(res)
         return res.json();
       })
       .then(data => {
@@ -54,7 +74,6 @@ function App() {
         setPrev(data.previous);
         setNext(data.next);
         setData(data.results);
-        console.log(data.results)
       })
   };
 
@@ -79,24 +98,33 @@ function App() {
       .then(data => {
         setSinglePokemon(data);
         setIsSinglePokemon(true);
+        gotoInfoSection()
       })
   }
+ 
 
 
 
 const urlChange = (newUrl)=>{
+  console.log(newUrl)
+  if(newUrl!='https://pokeapi.co/api/v2/pokemon')
+  {
   setUrl(newUrl)
+  }
+  else
+  {
+    
+    setIsAll(!isAll)
+  }
+
 }
   return (
     <div className={'main-container'}>
-      {/* <div>{isData && (<div>Count: {allPokemon}</div>)}</div>
-      <div>{isData && (<div>Next: {next}</div>)}</div>
-      <div>{isData && (<div>Prev: {prev}</div>)}</div> */}
       <div className ={'header-container'}>
         <div>
-          
+
         </div>
-        <div><PokemonFilter urlChange = {urlChange}/></div>
+        <div className='filterButton'><PokemonFilter urlChange = {urlChange}/></div>
       </div>
       {isData && (<div className={'pokemon-container'}>
         {data.map(item => 
@@ -112,7 +140,7 @@ const urlChange = (newUrl)=>{
         <Button onClick={onClickNext}>Next</Button>
       </div>}
       {isSinglePokemon && (
-        <div>
+        <div ref={infoSection}>
           <div>
             <PokemonInfo pokemon={singlePokemon}/>
           </div>

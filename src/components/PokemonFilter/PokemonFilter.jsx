@@ -4,9 +4,7 @@ import DropdownItem from "react-bootstrap/esm/DropdownItem"
 
 const PokemonFilter = ({urlChange}) => {
     
-  /*  const dataFilter =[{name: 'normal', url:"https://pokeapi.co/api/v2/type/1/"},
-{name:'fighting', url:'https://pokeapi.co/api/v2/type/2/'}]
-    console.log(dataFilter)*/
+  
     const [dataFilter, setFilter] = useState([]);
     const [TitleName, setTitle] = useState('Filters');
 
@@ -16,7 +14,6 @@ const PokemonFilter = ({urlChange}) => {
             return res.json();
           })
           .then(data => {
-            console.log(data);
             setFilter(data.results);
           })
       }, []);
@@ -36,6 +33,7 @@ const PokemonFilter = ({urlChange}) => {
             <Dropdown.Menu>
                 <DropdownItem onClick={()=>{
                     onClickFilter('All pokemons')
+                    urlChange('https://pokeapi.co/api/v2/pokemon')
                 }}>All pokemons</DropdownItem>
             {dataFilter.map(filter=>(
                 <DropdownItem key={filter.name} onClick={()=>{
